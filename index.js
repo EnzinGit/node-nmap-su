@@ -19,7 +19,7 @@ var nodenmap;
     nodenmap.nmapLocation = "nmap";
     var NmapScan = (function (_super) {
         __extends(NmapScan, _super);
-        function NmapScan(range, inputArguments) {
+        function NmapScan(range, sudo, inputArguments) {
             _super.call(this);
             this.command = [];
             this.nmapoutputXML = "";
@@ -30,6 +30,7 @@ var nodenmap;
             this.scanTime = 0;
             this.error = null;
             this.scanTimeout = 0;
+            this.sudo = sudo;
             this.commandConstructor(range, inputArguments);
             this.initializeChildProcess();
         }
@@ -70,7 +71,7 @@ var nodenmap;
         NmapScan.prototype.initializeChildProcess = function () {
             var _this = this;
             this.startTimer();
-            this.child = spawn(nodenmap.nmapLocation, this.command);
+            this.child = spawn(this.sudo ? "sudo" : nodenmap.nmapLocation, [(this.sudo ? nodenmap.nmapLocation : null), ...this.command]);
             process.on('SIGINT', this.killChild);
             process.on('uncaughtException', this.killChild);
             process.on('exit', this.killChild);
@@ -210,7 +211,7 @@ var nodenmap;
     var QuickScan = (function (_super) {
         __extends(QuickScan, _super);
         function QuickScan(range) {
-            _super.call(this, range, '-sP');
+            _super.call(this, range, false, '-sP');
         }
         return QuickScan;
     })(NmapScan);
@@ -218,7 +219,7 @@ var nodenmap;
     var OsAndPortScan = (function (_super) {
         __extends(OsAndPortScan, _super);
         function OsAndPortScan(range) {
-            _super.call(this, range, '-O');
+            _super.call(this, range, true, '-O');
         }
         return OsAndPortScan;
     })(NmapScan);

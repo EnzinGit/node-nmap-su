@@ -1,5 +1,5 @@
 {
-  "name": "node-nmap",
+  "name": "node-nmap-sudo",
   "version": "3.0.4",
   "description": "Interfaces with locally installed NMAP",
   "main": "index.js",
@@ -20,7 +20,7 @@
     "./index.d.ts",
     "./typings/node/node.d.ts"
   ],
-  "author": "John H Horton",
+  "author": "John H Horton && Enzin",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Johnhhorton/node-nmap/issues"

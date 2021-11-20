@@ -47,8 +47,10 @@ export module nodenmap {
         error: string = null;
         scanResults: host[];
         scanTimeout: number = 0;
-        constructor(range: any, inputArguments?: any) {
+        sudo: boolean = false;
+        constructor(range: any, sudo: boolean = false, inputArguments?: any) {
             super();
+            this.sudo = sudo;
             this.commandConstructor(range, inputArguments);
             this.initializeChildProcess();
         }
@@ -89,7 +91,7 @@ export module nodenmap {
         }
         private initializeChildProcess() {
             this.startTimer();
-            this.child = spawn(nmapLocation, this.command);
+            this.child = spawn(this.sudo ? "sudo" : nmapLocation, [(this.sudo ? nmapLocation : null), ...this.command]);
             process.on('SIGINT', this.killChild);
             process.on('uncaughtException', this.killChild);
             process.on('exit', this.killChild);
@@ -229,12 +231,12 @@ export module nodenmap {
     }
     export class QuickScan extends NmapScan {
         constructor(range: any) {
-            super(range, '-sP');
+            super(range, false, '-sP');
         }
     }
     export class OsAndPortScan extends NmapScan {
         constructor(range: any) {
-            super(range, '-O');
+            super(range, true, '-O');
         }
     }
     // export class autoDiscover extends NmapScan {
