@@ -81,7 +81,9 @@ export module nodenmap {
                 range = range.split(' ');
             }
             this.range = range;
-            this.command = this.command.concat(['-host-timeout', this.scanTimeout + "ms", ...this.range]);
+            this.command.push("-host-timeout", this.scanTimeout + "ms");
+            this.command = this.command.concat(this.range);
+            
         }
         private killChild() {
             this.cancelled = true;
