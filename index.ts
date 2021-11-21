@@ -48,9 +48,10 @@ export module nodenmap {
         scanResults: host[];
         scanTimeout: number = 0;
         sudo: boolean = false;
-        constructor(range: any, sudo: boolean = false, inputArguments?: any) {
+        constructor(range: any, sudo: boolean = false, timeout: number = 5000, inputArguments?: any) {
             super();
             this.sudo = sudo;
+            this.scanTimeout = timeout;
             this.commandConstructor(range, inputArguments);
             this.initializeChildProcess();
         }
@@ -80,7 +81,7 @@ export module nodenmap {
                 range = range.split(' ');
             }
             this.range = range;
-            this.command = this.command.concat(this.range);
+            this.command = this.command.concat(['-host-timeout', this.scanTimeout + "ms", ...this.range]);
         }
         private killChild() {
             this.cancelled = true;
